@@ -278,6 +278,8 @@ if CLIENT then
 
     function SWEP:actionTrace()
         local trace = self.Owner:GetEyeTraceNoCursor()
+        if trace.Entity == NULL then return end -- Reject null values (supresses errors)
+
         if (trace.Entity:GetClass()=="prop_ff_module") then
             local gridx, gridy = trace.Entity:GetPlayerTargetedTile(LocalPlayer())
             if (!gridx || !gridy) then return false end
