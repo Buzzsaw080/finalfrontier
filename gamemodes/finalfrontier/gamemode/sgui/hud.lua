@@ -110,6 +110,8 @@ local oldHealth = 100
 local oldOxy = 100
 local CanPress = true
 
+local BGColor = Color(55,55,60)
+
 function GM:HUDPaint()
     local ply = LocalPlayer()
     local hp = ply:Health()
@@ -137,22 +139,22 @@ function GM:HUDPaint()
     
     if ShouldDraw() then
 		--Health
-			drawRadialBar(200, ScrH()-200, hprad, oldHealth, maxhp, xoffset, yoffset, hpwidth, Color(55,55,60), Color(255,0,0), Color(150,0,0))
-			draw.SimpleText( "HP", "LHUD_Font_Large", 200-xoffset,ScrH()-220+yoffset, Color(200,200,200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			draw.SimpleText( math.Round(oldHealth), "LHUD_Font_Large", 200-xoffset,ScrH()-180+yoffset, Color(200,200,200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			drawRadialBar(200, ScrH()-200, hprad, oldHealth, maxhp, xoffset, yoffset, hpwidth, BGColor, COLORS.Red, COLORS.DarkRed)
+			draw.SimpleText( "HP", "LHUD_Font_Large", 200-xoffset,ScrH()-220+yoffset, COLORS.LightGrey, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( math.Round(oldHealth), "LHUD_Font_Large", 200-xoffset,ScrH()-180+yoffset, COLORS.LightGrey, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 		--Oxygen
-			drawRadialBar(350, ScrH()-100, oxyrad, oldOxy, maxoxy, xoffset, yoffset, oxywidth, Color(55,55,60), Color(0,100,255), Color(0,50,150))
-			draw.SimpleText( "OXY", "LHUD_Font", 350-xoffset,ScrH()-115+yoffset, Color(200,200,200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			draw.SimpleText( math.Round(oldOxy), "LHUD_Font", 350-xoffset,ScrH()-85+yoffset, Color(200,200,200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			drawRadialBar(350, ScrH()-100, oxyrad, oldOxy, maxoxy, xoffset, yoffset, oxywidth, BGColor, COLORS.Blue, COLORS.DarkBlue)
+			draw.SimpleText( "OXY", "LHUD_Font", 350-xoffset,ScrH()-115+yoffset, COLORS.LightGrey, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( math.Round(oldOxy), "LHUD_Font", 350-xoffset,ScrH()-85+yoffset, COLORS.LightGrey, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
         
     end
 	--Death screen
 	if ply:Health() <= 0 or not ply:Alive() then
 		surface.SetDrawColor(0,0,0,240)
 		surface.DrawRect(0,0,ScrW(),ScrH())
-		draw.SimpleText( "YOU ARE DEAD", "FF_Death_Font", ScrW()/2, 100, Color(180,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-		draw.SimpleText( "You will respawn in:", "FF_Death_Font", ScrW()/2, 160, Color(180,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-		draw.SimpleText( ply:GetNWInt("NWDeathTime"), "FF_Death_Font", ScrW()/2, 220, Color(180,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "YOU ARE DEAD", "FF_Death_Font", ScrW()/2, 100, COLORS.Red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "You will respawn in:", "FF_Death_Font", ScrW()/2, 160, COLORS.Red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( ply:GetNWInt("NWDeathTime"), "FF_Death_Font", ScrW()/2, 220, COLORS.Red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 end
 
@@ -180,46 +182,8 @@ function GM:PostDrawOpaqueRenderables()
 		
 		if IsDev(tr) then
 			cam.Start3D2D(tr:GetPos() + Vector(0,0,75), ply:EyeAngles():Right():Angle() + Angle(0,0,90), 0.1)
-			draw.SimpleText( "-DEV-", "CTextMedium", 0, 0, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			draw.SimpleText( "-DEV-", "CTextMedium", 0, 0, COLORS.Red, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			cam.End3D2D()
 		end
-	end
-end
-
-function GM:OnPlayerChat( ply, txt, Team, PlayerIsDead )
-    local nickteamcolor = team.GetColor(ply:Team())
-    local nickteam = team.GetName(ply:Team())
-	if IsDev(ply) then
-		if ply:Alive() then
-		chat.AddText(Color(255, 50, 0, 255), "-DEV- ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-		else
-		chat.AddText(Color(255, 50, 0, 255), "-DEV- *REKT* ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-		end
-		return true
-	elseif ply:IsAdmin() or ply:IsSuperAdmin() then
-		if ply:Alive() then
-		chat.AddText(Color(180, 0, 0, 255), "-ADMIN- ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-		else
-		chat.AddText(Color(180, 0, 0, 255), "-ADMIN- *REKT* ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-		end
-		return true
-	else
-	if Team then
-				if ply:Alive() then
-				chat.AddText(Color(255, 0, 0, 255), "(TEAM) ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-				else
-				chat.AddText(Color(255, 0, 0, 255), "*DEAD* (TEAM) ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-				end
-				return true
-	end
-	if ply:IsPlayer() then
-	if ply:Alive() then
-				chat.AddText(Color(255, 0, 0, 255), "", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-				return true
-	elseif !ply:Alive() then
-				chat.AddText(Color(255, 0, 0, 255), "*DEAD* ", nickteamcolor, nickteam, Color(50, 50, 50, 255), "| ", nickteamcolor, ply:Nick(), color_white, ": ", Color(255, 255, 255, 255), txt)
-				return true
-	end
-	end
 	end
 end

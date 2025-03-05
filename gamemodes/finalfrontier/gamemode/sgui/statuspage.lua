@@ -26,6 +26,11 @@ GUI.RightIcon = nil
 GUI.CycleTime = -1
 GUI.CycleIndex = 0
 
+GUI.WarningIcons = {}
+GUI.WarningIcons["power"] = Material("alertpower.png")
+GUI.WarningIcons["shield"] = Material("alertshield.png")
+GUI.WarningIcons["lifesupport"] = Material("alertlifesupport.png")
+
 function GUI:Enter()
     self.Super[BASE].Enter(self)
 
@@ -66,13 +71,13 @@ function GUI:CycleIcons()
 
     local CycleImages = {}
     if self:CheckModuleDamaged(moduletype.SYSTEM_POWER) then
-        CycleImages[#CycleImages + 1] = Material("alertpower.png")
+        CycleImages[#CycleImages + 1] = self.WarningIcons["power"]
     end
     if self:CheckModuleDamaged(moduletype.SHIELDS) then
-        CycleImages[#CycleImages + 1] = Material("alertshield.png")
+        CycleImages[#CycleImages + 1] = self.WarningIcons["shield"]
     end
     if self:CheckModuleDamaged(moduletype.LIFE_SUPPORT) then
-        CycleImages[#CycleImages + 1] = Material("alertlifesupport.png")
+        CycleImages[#CycleImages + 1] = self.WarningIcons["lifesupport"]
     end
 
     if #CycleImages == 0 then
@@ -85,14 +90,12 @@ function GUI:CycleIcons()
     if self.CycleIndex > #CycleImages then
         self.CycleIndex = 1 -- If we've cycled through everything, circle back
     end
-
     
     self.RightIcon.Material = CycleImages[self.CycleIndex]
-    self.RightIcon.Color = Color(173,41,47)
+    self.RightIcon.Color = COLORS.Warning
 end
 
 function GUI:SetIcons(material, color)
-    print(material)
     self.LeftIcon.Material = material
     self.RightIcon.Material = material
     self.LeftIcon.Color = color
