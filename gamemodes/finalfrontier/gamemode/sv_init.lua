@@ -143,7 +143,7 @@ concommand.Add("ff_reset", function()
 
     for k, ply in pairs(player.GetAll()) do
         ply:UpdateRace("human")
-        ply:SetMaxOxygen(100)
+        -- ply:SetMaxOxygen(100)
     end
 
     for _, ship in pairs(ships._dict) do
